@@ -1,19 +1,18 @@
 package main
 
 import (
-	"net/http"
-
+	"api.com/routes"
+	"api.com/sqldb"
 	"github.com/gin-gonic/gin"
 )
 
 func main() {
+	sqldb.InitDB()
+
+	//server is a pointer because of gin package
 	server := gin.Default()
 
-	server.GET("/events", getEvents)
+	routes.RegisterRoutes(server)
 
 	server.Run(":8080") //localhost:8080
-}
-
-func getEvents(context *gin.Context) {
-	context.JSON(http.StatusOK, gin.H{"message": "vai toma"})
 }
