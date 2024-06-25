@@ -5,6 +5,7 @@ import (
 	"strconv"
 
 	"api.com/models"
+	"api.com/utils"
 	"github.com/gin-gonic/gin"
 )
 
@@ -19,16 +20,16 @@ func getAllEvents(context *gin.Context) {
 }
 
 func createEvent(context *gin.Context) {
+	
 	var event models.Event
-	err := context.ShouldBindJSON(&event)
+	err = context.ShouldBindJSON(&event)
 
 	if err != nil {
 		context.JSON(http.StatusBadRequest, gin.H{"message": "could not parse data"})
 		return
 	}
 
-	event.ID = 1
-	event.UserID = 1
+	event.UserID = userId
 
 	error := event.Save()
 

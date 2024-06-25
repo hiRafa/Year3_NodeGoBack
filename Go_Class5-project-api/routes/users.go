@@ -4,6 +4,7 @@ import (
 	"net/http"
 
 	"api.com/models"
+	"api.com/utils"
 	"github.com/gin-gonic/gin"
 )
 
@@ -16,7 +17,6 @@ func getAllUsers(context *gin.Context) {
 	}
 	context.JSON(http.StatusOK, events)
 }
-
 
 func signup(context *gin.Context) {
 	var user models.User
@@ -47,5 +47,12 @@ func login(context *gin.Context) {
 		return
 	}
 
-	context.JSON(http.StatusOK, gin.H{"message": "Login successful"})
+	token, err := utils.GenerateToken(user.Email, user.ID)
+
+	if err != nil {
+		context.JSON(http.StatusInternalServerError, gin.H{"error": "could not authenticate"})
+		return
+	}
+
+	context.JSON(http.StatusOK, gin.H{"message": "Login successful", "token": token})
 }

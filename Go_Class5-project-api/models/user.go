@@ -38,7 +38,6 @@ func (u User) Save() error {
 		return err
 	}
 
-
 	u.ID = userId // Assign the last insert ID to u.ID
 	return err
 }
@@ -46,11 +45,11 @@ func (u User) Save() error {
 func (u *User) ValidateCredentials() error {
 	// select only the password from the database, email is being received in the u.Email (struct populated from the request)
 	// row will contain the password from the database by quering the u.Email from the SQL DB
-	query := "SELECT password FROM users WHERE email = ?"
+	query := "SELECT id, password FROM users WHERE email = ?"
 	row := sqldb.DB.QueryRow(query, u.Email)
 	// extract the data
 	var dbPassword string
-	err := row.Scan(&dbPassword)
+	err := row.Scan(&u.ID, &dbPassword)
 
 	if err != nil {
 		return errors.New("Credentials are invalid. Please try again.")
