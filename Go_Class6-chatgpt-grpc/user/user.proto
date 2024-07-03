@@ -1,0 +1,23 @@
+syntax = "proto3";
+
+option go_package = "grpctest.com/go/userpb";
+
+service UserService {
+    rpc GetUserById(UserByIdRequest) returns (UserResponse);
+    rpc CreateUser(CreateUserRequest) returns (UserResponse);
+}
+
+message UserByIdRequest {
+    int32 id = 1;
+}
+
+message CreateUserRequest {
+    string name = 1;
+    string email = 2;
+}
+
+message UserResponse {
+    int32 id = 1;
+    string name = 2;
+    string email = 3;
+}
