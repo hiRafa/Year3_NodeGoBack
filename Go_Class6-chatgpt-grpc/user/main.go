@@ -1,6 +1,7 @@
 package main
 
 import (
+	"database/sql"
 	"log"
 	"net"
 
@@ -8,12 +9,17 @@ import (
 	"google.golang.org/grpc/reflection"
 )
 
+var DB *sql.DB
+
 func main() {
 	// Connect to the database (example using SQLite)
-	db, err := sqldb.InitDB()
+	db, err := sql.Open("sqlite", "api.sql")
 	if err != nil {
-		log.Fatalf("Failed to connect to the database: %v", err)
+		panic("Database could not connect: " + err.Error())
 	}
+
+	DB = db
+
 	defer db.Close()
 
 	// Initialize the gRPC server
