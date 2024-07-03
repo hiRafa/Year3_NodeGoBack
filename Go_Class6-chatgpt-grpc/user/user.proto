@@ -1,6 +1,8 @@
 syntax = "proto3";
 
-option go_package = "grpctest.com/go/userpb";
+package main;
+
+option go_package = "/userpb";
 
 service UserService {
     rpc GetUserById(UserByIdRequest) returns (UserResponse);

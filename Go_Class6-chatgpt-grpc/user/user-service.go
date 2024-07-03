@@ -3,7 +3,7 @@ package main
 import (
 	"context"
 
-	pb "grpctest.com/go/userpb"
+	pb "github.com/hiRafa/courses_2024/Go_Class6-chatgpt-grpc/user/userpb/user.pb.go"
 )
 
 // userService implements the UserService server interface

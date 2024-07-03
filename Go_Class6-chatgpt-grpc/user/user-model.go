@@ -4,7 +4,7 @@ import (
 	"database/sql"
 	"log"
 
-	pb "grpctest.com/go/userpb"
+	pb "/userpb/user.pb.go"
 )
 
 // UserModel simulates a user model interacting with a database
