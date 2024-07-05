@@ -22,6 +22,7 @@ func Authenticate(context *gin.Context) {
 		return
 	}
 
+	context.Set("userId", userId)
 	context.Next()
 	// goes to the next handler in line after this function is finished calling.
 }

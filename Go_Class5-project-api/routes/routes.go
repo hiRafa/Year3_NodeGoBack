@@ -1,15 +1,24 @@
 package routes
 
-import "github.com/gin-gonic/gin"
+import (
+	"api.com/middlewares"
+	"github.com/gin-gonic/gin"
+)
 
-//in the main function server is a pointer, therefore the type of
+// in the main function server is a pointer, therefore the type of
 // paramter server here is a pointer to the gin Engine.
 func RegisterRoutes(server *gin.Engine) {
 	server.GET("/events", getAllEvents)
-	server.POST("/events", createEvent)
-	server.GET("/events/:id", getEventbyID)
-	server.PUT("/events/:id", updateEvent)
-	server.DELETE("/events/:id", deleteEvent)
+
+	server.POST("/events", middlewares.Authenticate, createEvent)
+	authenticatedGroup := server.Group("/")
+	authenticatedGroup.Use(middlewares.Authenticate)
+	authenticatedGroup.GET("/events/:id", getEventbyID)
+	authenticatedGroup.PUT("/events/:id", updateEvent)
+	authenticatedGroup.DELETE("/events/:id", deleteEvent)
+	authenticatedGroup.POST("/events/:id/registerusers", addEventUser)
+	authenticatedGroup.DELETE("/events/:id/registerusers", deleteEventUser)
+
 	server.GET("/allusers", getAllUsers)
 	server.POST("/signup", signup)
 	server.POST("/login", login)

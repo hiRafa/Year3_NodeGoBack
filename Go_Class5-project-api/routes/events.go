@@ -5,7 +5,6 @@ import (
 	"strconv"
 
 	"api.com/models"
-	"api.com/utils"
 	"github.com/gin-gonic/gin"
 )
 
@@ -20,9 +19,9 @@ func getAllEvents(context *gin.Context) {
 }
 
 func createEvent(context *gin.Context) {
-	
+
 	var event models.Event
-	err = context.ShouldBindJSON(&event)
+	err := context.ShouldBindJSON(&event)
 
 	if err != nil {
 		context.JSON(http.StatusBadRequest, gin.H{"message": "could not parse data"})
@@ -70,9 +69,15 @@ func updateEvent(context *gin.Context) {
 		return
 	}
 
-	_, error = models.GetEventByID(eventId)
+	event, error := models.GetEventByID(eventId)
 	if error != nil {
 		context.JSON(http.StatusInternalServerError, gin.H{"message": "could not fetch event"})
+		return
+	}
+
+	userId := context.GetInt64("userId")
+	if event.UserID != userId {
+		context.JSON(http.StatusUnauthorized, gin.H{"message": "Not authorized"})
 		return
 	}
 
@@ -106,6 +111,12 @@ func deleteEvent(context *gin.Context) {
 	event, error := models.GetEventByID(eventId)
 	if error != nil {
 		context.JSON(http.StatusInternalServerError, gin.H{"message": "could not fetch event"})
+		return
+	}
+
+	userId := context.GetInt64("userId")
+	if event.UserID != userId {
+		context.JSON(http.StatusUnauthorized, gin.H{"message": "Not authorized"})
 		return
 	}
 

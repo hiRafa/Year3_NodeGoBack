@@ -4,7 +4,7 @@ import (
 	"database/sql"
 	"log"
 
-	pb "/userpb/user.pb.go"
+	userpb "my-grpc-project/userpb"
 )
 
 // UserModel simulates a user model interacting with a database
@@ -13,12 +13,12 @@ type UserModel struct {
 }
 
 // GetUserByID retrieves a user by ID from the database
-func (m *UserModel) GetUserByID(id int32) (*pb.UserResponse, error) {
+func (m *UserModel) GetUserByID(id int32) (*userpb.UserResponse, error) {
 	// Example query
 	query := "SELECT id, name, email FROM users WHERE id = ?"
 	row := m.DB.QueryRow(query, id)
 
-	user := &pb.UserResponse{}
+	user := &userpb.UserResponse{}
 	err := row.Scan(&user.Id, &user.Name, &user.Email)
 	if err != nil {
 		log.Printf("Error fetching user: %v", err)
@@ -29,7 +29,7 @@ func (m *UserModel) GetUserByID(id int32) (*pb.UserResponse, error) {
 }
 
 // CreateUser inserts a new user into the database
-func (m *UserModel) CreateUser(name, email string) (*pb.UserResponse, error) {
+func (m *UserModel) CreateUser(name, email string) (*userpb.UserResponse, error) {
 	// Example insert query
 	query := "INSERT INTO users (name, email) VALUES (?, ?)"
 	result, err := m.DB.Exec(query, name, email)
@@ -39,7 +39,7 @@ func (m *UserModel) CreateUser(name, email string) (*pb.UserResponse, error) {
 	}
 
 	id, _ := result.LastInsertId()
-	user := &pb.UserResponse{
+	user := &userpb.UserResponse{
 		Id:    int32(id),
 		Name:  name,
 		Email: email,
