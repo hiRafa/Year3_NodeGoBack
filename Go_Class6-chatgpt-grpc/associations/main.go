@@ -11,7 +11,7 @@ import (
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/reflection"
 
-	userpb "my-grpc-project/userpb"
+	associationspb "my-grpc-project/associationspb"
 )
 
 var DB *sql.DB
@@ -42,10 +42,10 @@ func main() {
 	server := grpc.NewServer()
 
 	// Initialize an instance of your gRPC service implementation
-	userModelService := &UserModelService{db: db}
+	AssociationsDBModel := &AssociationsDBModel{db: db}
 
 	// Register the UserService server with the gRPC server
-	userpb.RegisterUserServiceServer(server, userModelService)
+	associationspb.RegisterAssociationsDBServer(server, AssociationsDBModel)
 
 	// Register reflection service on gRPC server
 	reflection.Register(server)

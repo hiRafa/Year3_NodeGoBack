@@ -5,24 +5,24 @@ import (
 	"database/sql"
 	"log"
 
-	userpb "my-grpc-project/userpb"
+	associationspb "my-grpc-project/associationspb"
 )
 
-// UserModelService implements the UserServiceServer interface
-type UserModelService struct {
-	userpb.UnimplementedUserServiceServer
+// AssociationsDBModel implements the UserServiceServer interface
+type AssociationsDBModel struct {
+	associationspb.UnimplementedUserServiceServer
 	db *sql.DB
 }
 
 // GetUserById retrieves a user by ID
-func (s *UserModelService) GetUserById(ctx context.Context, req *userpb.UserByIdRequest) (*userpb.UserResponse, error) {
-	// 's' is our key to the UserModelService vault
+func (s *AssociationsDBModel) GetUserById(ctx context.Context, req *associationspb.UserByIdRequest) (*associationspb.AssociationsResponse, error) {
+	// 's' is our key to the AssociationsDBModel vault
 	// 's.db' is accessing a magical database tool from the vault
 	// 'QueryRow' is using that tool to search for a specific treasure (user data)
 	row := s.db.QueryRow("SELECT id, name, email FROM users WHERE id = ?", req.Id)
 
 	// Creating a new treasure chest to hold what we find
-	user := &userpb.UserResponse{} /// the road pointer & is here
+	user := &associationspb.AssociationsResponse{} /// the road pointer & is here
 
 	// Filling our new treasure chest with the jewels (data) we found
 	err := row.Scan(&user.Id, &user.Name, &user.Email)
@@ -37,7 +37,7 @@ func (s *UserModelService) GetUserById(ctx context.Context, req *userpb.UserById
 }
 
 // CreateUser creates a new user
-func (s *UserModelService) CreateUser(ctx context.Context, req *userpb.CreateUserRequest) (*userpb.UserResponse, error) {
+func (s *AssociationsDBModel) CreateUser(ctx context.Context, req *associationspb.CreateUserRequest) (*associationspb.AssociationsResponse, error) {
 	// Example insert query
 	query := "INSERT INTO users (name, email) VALUES (?, ?)"
 	result, err := s.db.Exec(query, req.Name, req.Email)
@@ -47,7 +47,7 @@ func (s *UserModelService) CreateUser(ctx context.Context, req *userpb.CreateUse
 	}
 
 	id, _ := result.LastInsertId()
-	user := &userpb.UserResponse{
+	user := &associationspb.AssociationsResponse{
 		Id:    int32(id),
 		Name:  req.Name,
 		Email: req.Email,
